@@ -1,27 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
+    public static MainManager Instance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text ScoreText1;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
     
     private bool m_GameOver = false;
+    
+
+
 
     
-    // Start is called before the first frame update
     void Start()
     {
+        ScoreText1.text = $"Score: {MenuManager.Instance.name} {MenuManager.Instance.score}";
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -70,7 +76,14 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (m_Points>MenuManager.Instance.score)
+        {
+            MenuManager.Instance.score = m_Points;
+            ScoreText1.text = $"Score: {MenuManager.Instance.name} {MenuManager.Instance.score}";
+            MenuManager.Instance.SaveScore();
+        }
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
+    
 }
